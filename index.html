@@ -9,15 +9,17 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0b0f14;
-    --panel:#121820;
-    --panel-2:#0e131a;
-    --line:#232b36;
-    --text:#dfe6ee;
-    --muted:#7c8794;
-    --amber:#e2a03f;
-    --teal:#4fb8c4;
-    --red:#d1554a;
+    /* Dark Mode SOC Command Center Palette */
+    --bg:#0D1117;
+    --panel:#161B22;
+    --panel-2:#0E131A;
+    --line:#21262D;
+    --text:#F0F6FC;
+    --muted:#8B949E;
+    --cyan:#00F0FF;
+    --emerald:#10B981;
+    --amber:#F59E0B;
+    --red:#EF4444;
     --mono:'JetBrains Mono', ui-monospace, monospace;
     --sans:'Inter', -apple-system, sans-serif;
   }
@@ -30,17 +32,17 @@
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
-  ::selection{background:var(--amber); color:#0b0f14;}
-  a{color:var(--teal); text-decoration:none;}
+  ::selection{background:var(--cyan); color:#0B0F14;}
+  a{color:var(--cyan); text-decoration:none; transition:color 0.2s;}
   a:hover{text-decoration:underline;}
-  a:focus-visible, button:focus-visible{outline:2px solid var(--teal); outline-offset:3px;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--cyan); outline-offset:3px;}
 
   .wrap{max-width:1040px; margin:0 auto; padding:0 28px;}
 
-  /* ---------- Nav ---------- */
+  /* ---------- Nav & Terminal Bar ---------- */
   header{
     position:sticky; top:0; z-index:50;
-    background:rgba(11,15,20,0.88);
+    background:rgba(13,17,23,0.92);
     backdrop-filter:blur(8px);
     border-bottom:1px solid var(--line);
   }
@@ -48,12 +50,30 @@
     display:flex; align-items:center; justify-content:space-between;
     padding:16px 28px; max-width:1040px; margin:0 auto;
   }
-  .brand{font-family:var(--mono); font-weight:600; font-size:15px; color:var(--text);}
-  .brand span{color:var(--amber);}
+  .brand{font-family:var(--mono); font-weight:600; font-size:15px; color:var(--text); display:flex; align-items:center; gap:12px;}
+  .brand span{color:var(--cyan);}
+  
+  .status-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3);
+    color:var(--emerald); font-family:var(--mono); font-size:12px;
+    padding:4px 10px; border-radius:20px; cursor:pointer; transition:all 0.2s;
+  }
+  .status-badge:hover{background:rgba(16,185,129,0.2); border-color:var(--emerald);}
+  
   .navlinks{display:flex; gap:26px; font-size:14px;}
   .navlinks a{color:var(--muted);}
   .navlinks a:hover{color:var(--text); text-decoration:none;}
   .navtoggle{display:none; background:none; border:1px solid var(--line); color:var(--text); font-family:var(--mono); font-size:13px; padding:6px 10px; border-radius:4px;}
+
+  /* Header System Drawer */
+  .system-drawer{
+    display:none; background:var(--panel-2); border-bottom:1px solid var(--line);
+    padding:12px 28px; font-family:var(--mono); font-size:12px; color:var(--muted);
+  }
+  .system-drawer.open{display:block;}
+  .drawer-grid{max-width:1040px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;}
+  .drawer-item span{color:var(--cyan);}
 
   /* ---------- Hero ---------- */
   .hero{
@@ -64,10 +84,10 @@
     display:grid; grid-template-columns:1.3fr 1fr; gap:48px; align-items:start;
   }
   .eyebrow{
-    font-family:var(--mono); font-size:13px; color:var(--teal);
+    font-family:var(--mono); font-size:13px; color:var(--cyan);
     margin-bottom:14px; display:flex; align-items:center; gap:8px;
   }
-  .dot{width:7px; height:7px; border-radius:50%; background:var(--teal); display:inline-block; animation:pulse 2s infinite;}
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--emerald); display:inline-block; animation:pulse 2s infinite;}
   @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:.35;}}
   h1{
     font-family:var(--sans); font-weight:700; font-size:44px; line-height:1.15;
@@ -78,19 +98,19 @@
   .pitch b{color:var(--text); font-weight:600;}
   .contact-row{display:flex; flex-wrap:wrap; gap:10px 22px; font-family:var(--mono); font-size:13.5px; color:var(--muted);}
   .contact-row a{color:var(--text);}
-  .contact-row a:hover{color:var(--teal);}
+  .contact-row a:hover{color:var(--cyan);}
 
-  /* ---------- Live feed panel (signature element) ---------- */
+  /* ---------- Live feed panel ---------- */
   .feed{
     background:var(--panel); border:1px solid var(--line); border-radius:6px;
-    overflow:hidden;
+    overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.3);
   }
   .feed-head{
     display:flex; align-items:center; justify-content:space-between;
     padding:10px 14px; border-bottom:1px solid var(--line);
     font-family:var(--mono); font-size:12px; color:var(--muted);
   }
-  .feed-head .status{color:var(--amber); display:flex; align-items:center; gap:6px;}
+  .feed-head .status{color:var(--red); display:flex; align-items:center; gap:6px;}
   .feed-body{padding:14px; font-family:var(--mono); font-size:12.5px; min-height:230px;}
   .feed-line{
     display:flex; gap:10px; padding:6px 0; border-bottom:1px dashed rgba(255,255,255,0.05);
@@ -103,16 +123,16 @@
     flex-shrink:0; font-weight:600; padding:0 5px; border-radius:3px; font-size:11px;
     height:18px; display:inline-flex; align-items:center;
   }
-  .tag.info{background:rgba(79,184,196,0.15); color:var(--teal);}
-  .tag.warn{background:rgba(226,160,63,0.15); color:var(--amber);}
-  .tag.crit{background:rgba(209,85,74,0.15); color:var(--red);}
+  .tag.info{background:rgba(0,240,255,0.15); color:var(--cyan);}
+  .tag.warn{background:rgba(245,158,11,0.15); color:var(--amber);}
+  .tag.crit{background:rgba(239,68,68,0.15); color:var(--red);}
   @keyframes reveal{to{opacity:1; transform:translateY(0);}}
 
   /* ---------- Section shell ---------- */
   section{padding:64px 0; border-bottom:1px solid var(--line);}
   section:last-of-type{border-bottom:none;}
   .section-head{margin-bottom:32px;}
-  .section-label{font-family:var(--mono); font-size:12.5px; color:var(--teal); margin-bottom:8px;}
+  .section-label{font-family:var(--mono); font-size:12.5px; color:var(--cyan); margin-bottom:8px;}
   h2{font-size:26px; font-weight:700; letter-spacing:-0.01em;}
   .section-sub{color:var(--muted); font-size:15px; margin-top:6px; max-width:60ch;}
 
@@ -120,7 +140,18 @@
   .about-body{font-size:16px; max-width:72ch; color:var(--text);}
   .about-body p + p{margin-top:14px;}
 
-  /* ---------- Skills ---------- */
+  /* ---------- Skills & Interactive Filter ---------- */
+  .filter-controls{
+    display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; font-family:var(--mono); font-size:12px;
+  }
+  .filter-btn{
+    background:var(--panel); border:1px solid var(--line); color:var(--muted);
+    padding:6px 12px; border-radius:4px; cursor:pointer; transition:all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active{
+    background:rgba(0,240,255,0.1); border-color:var(--cyan); color:var(--cyan);
+  }
+
   .skills-grid{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:6px; overflow:hidden;}
   .skill-cat{background:var(--panel); padding:20px 22px;}
   .skill-cat h3{font-family:var(--mono); font-size:13px; color:var(--amber); margin-bottom:10px; font-weight:600;}
@@ -128,26 +159,31 @@
   .skill-tag{
     font-family:var(--mono); font-size:12px; color:var(--text);
     border:1px solid var(--line); padding:4px 9px; border-radius:4px;
-    background:var(--panel-2);
+    background:var(--panel-2); transition:all 0.25s ease;
   }
+  .skill-tag.highlight{
+    border-color:var(--cyan); color:var(--cyan); background:rgba(0,240,255,0.08);
+    box-shadow:0 0 8px rgba(0,240,255,0.2);
+  }
+  .skill-tag.dim{opacity:0.3;}
 
-  /* ---------- Experience (timeline) ---------- */
+  /* ---------- Experience ---------- */
   .timeline{border-left:1px solid var(--line); margin-left:6px;}
   .tl-item{position:relative; padding:0 0 36px 28px;}
   .tl-item:last-child{padding-bottom:0;}
-  .tl-dot{position:absolute; left:-5px; top:4px; width:9px; height:9px; border-radius:50%; background:var(--teal); border:2px solid var(--bg);}
+  .tl-dot{position:absolute; left:-5px; top:4px; width:9px; height:9px; border-radius:50%; background:var(--cyan); border:2px solid var(--bg);}
   .tl-date{font-family:var(--mono); font-size:12.5px; color:var(--muted); margin-bottom:4px;}
   .tl-title{font-size:17px; font-weight:600; margin-bottom:10px;}
   .tl-list{list-style:none;}
   .tl-list li{position:relative; padding-left:16px; color:var(--muted); font-size:14.5px; margin-bottom:6px;}
   .tl-list li::before{content:"–"; position:absolute; left:0; color:var(--line);}
 
-  /* ---------- Projects (case files) ---------- */
+  /* ---------- Projects (Case Files) ---------- */
   .case{
-    background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--teal);
-    border-radius:4px; padding:22px 24px; margin-bottom:18px;
+    background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--cyan);
+    border-radius:4px; padding:22px 24px; margin-bottom:18px; transition:border-color 0.2s;
   }
-  .case.closed{border-left-color:var(--teal);}
+  .case.closed{border-left-color:var(--emerald);}
   .case.active{border-left-color:var(--amber);}
   .case-head{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:10px; flex-wrap:wrap;}
   .case-title{font-size:17px; font-weight:600;}
@@ -155,13 +191,29 @@
     font-family:var(--mono); font-size:11px; padding:3px 8px; border-radius:3px; flex-shrink:0;
     white-space:nowrap; height:fit-content;
   }
-  .case-status.closed{background:rgba(79,184,196,0.12); color:var(--teal);}
-  .case-status.active{background:rgba(226,160,63,0.12); color:var(--amber);}
+  .case-status.closed{background:rgba(16,185,129,0.12); color:var(--emerald);}
+  .case-status.active{background:rgba(245,158,11,0.12); color:var(--amber);}
   .case-desc{color:var(--muted); font-size:14.5px; margin-bottom:14px; max-width:70ch;}
   .case-list{list-style:none; margin-bottom:14px;}
   .case-list li{position:relative; padding-left:16px; font-size:14px; color:var(--text); margin-bottom:6px;}
   .case-list li::before{content:"›"; position:absolute; left:0; color:var(--amber);}
-  .case-tags{display:flex; flex-wrap:wrap; gap:6px;}
+  
+  .case-details{
+    display:none; margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);
+    font-family:var(--mono); font-size:12.5px; color:var(--muted); background:var(--panel-2); padding:12px; border-radius:4px;
+  }
+  .case-details.open{display:block;}
+  .case-toggle-btn{
+    background:none; border:none; color:var(--cyan); font-family:var(--mono); font-size:12px;
+    cursor:pointer; padding:0; margin-bottom:12px; display:inline-flex; align-items:center; gap:6px;
+  }
+  
+  .case-tags{display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
+  .view-code{
+    margin-left:auto; font-family:var(--mono); font-size:12px; color:var(--cyan);
+    border:1px solid var(--line); padding:3px 9px; border-radius:3px;
+  }
+  .view-code:hover{border-color:var(--cyan); text-decoration:none; background:rgba(0,240,255,0.08);}
   .case-tag{font-family:var(--mono); font-size:11px; color:var(--muted); border:1px solid var(--line); padding:2px 7px; border-radius:3px;}
 
   .more-projects{margin-top:8px;}
@@ -170,38 +222,75 @@
     padding:10px 0; list-style:none;
   }
   .more-projects summary::-webkit-details-marker{display:none;}
-  .more-projects summary::before{content:"+ "; color:var(--teal);}
+  .more-projects summary::before{content:"+ "; color:var(--cyan);}
   .more-projects[open] summary::before{content:"– ";}
   .mini-case{padding:14px 0; border-top:1px dashed var(--line);}
   .mini-case:first-of-type{border-top:1px solid var(--line); margin-top:4px;}
   .mini-case-title{font-weight:600; font-size:14.5px; margin-bottom:4px;}
   .mini-case-desc{color:var(--muted); font-size:13.5px;}
 
-  /* ---------- Certifications ---------- */
+  /* ---------- Certifications & Interactive Badges ---------- */
   .cert-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
   .cert{
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    position:relative; display:flex; align-items:center; justify-content:space-between; gap:12px;
     padding:12px 16px; background:var(--panel); border:1px solid var(--line); border-radius:5px;
-    font-size:13.5px;
+    font-size:13.5px; cursor:pointer; transition:border-color 0.2s;
   }
+  .cert:hover{border-color:var(--cyan);}
   .cert-name{font-weight:500;}
   .cert-date{font-family:var(--mono); font-size:11.5px; color:var(--muted); white-space:nowrap;}
   .cert-date.progress{color:var(--amber);}
+
+  .cert-tooltip{
+    position:absolute; bottom:110%; left:50%; transform:translateX(-50%);
+    width:90%; background:var(--panel-2); border:1px solid var(--cyan);
+    padding:10px; border-radius:4px; font-family:var(--mono); font-size:11px;
+    color:var(--text); box-shadow:0 4px 20px rgba(0,0,0,0.5); opacity:0;
+    pointer-events:none; transition:opacity 0.2s ease, transform 0.2s ease; z-index:10;
+  }
+  .cert:hover .cert-tooltip{opacity:1; transform:translateX(-50%) translateY(-4px);}
 
   /* ---------- Education ---------- */
   .edu-title{font-size:17px; font-weight:600; margin-bottom:4px;}
   .edu-sub{color:var(--muted); font-size:14.5px;}
   .edu-date{font-family:var(--mono); font-size:12.5px; color:var(--muted); margin-top:6px;}
 
-  /* ---------- Contact / Footer ---------- */
+  /* ---------- Escalation Console Contact Form ---------- */
   .contact-section{text-align:left;}
-  .contact-cta{font-size:22px; font-weight:700; margin-bottom:12px; max-width:24ch;}
-  .contact-links{display:flex; flex-wrap:wrap; gap:14px 28px; margin-top:20px;}
+  .contact-cta{font-size:22px; font-weight:700; margin-bottom:12px; max-width:28ch;}
+  
+  .console-form{
+    background:var(--panel); border:1px solid var(--line); border-radius:6px;
+    padding:24px; margin-top:24px; max-width:680px; font-family:var(--mono);
+  }
+  .form-group{margin-bottom:16px;}
+  .form-group label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px;}
+  .form-group input, .form-group textarea, .form-group select{
+    width:100%; background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    padding:10px; border-radius:4px; font-family:var(--mono); font-size:13px;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus{
+    outline:none; border-color:var(--cyan);
+  }
+  .form-submit-btn{
+    background:rgba(0,240,255,0.1); border:1px solid var(--cyan); color:var(--cyan);
+    padding:10px 20px; border-radius:4px; font-family:var(--mono); font-size:13px;
+    font-weight:600; cursor:pointer; transition:all 0.2s; width:100%;
+  }
+  .form-submit-btn:hover{
+    background:var(--cyan); color:#0B0F14;
+  }
+  .console-output{
+    display:none; margin-top:16px; padding:12px; background:var(--panel-2);
+    border:1px solid var(--emerald); color:var(--emerald); font-size:12px; border-radius:4px;
+  }
+
+  .contact-links{display:flex; flex-wrap:wrap; gap:14px 28px; margin-top:28px;}
   .contact-links a{
     font-family:var(--mono); font-size:14px; color:var(--text);
     border:1px solid var(--line); padding:9px 16px; border-radius:5px;
   }
-  .contact-links a:hover{border-color:var(--teal); color:var(--teal); text-decoration:none;}
+  .contact-links a:hover{border-color:var(--cyan); color:var(--cyan); text-decoration:none;}
   footer{padding:28px 0; text-align:center; font-family:var(--mono); font-size:12px; color:var(--muted);}
 
   /* ---------- Responsive ---------- */
@@ -228,7 +317,12 @@
 
 <header>
   <nav>
-    <div class="brand">M<span>.</span>AWAD</div>
+    <div class="brand">
+      M<span>.</span>AWAD
+      <div class="status-badge" id="statusBadge" title="Click to view system status">
+        <span class="dot"></span> SOC: ACTIVE
+      </div>
+    </div>
     <div class="navlinks" id="navlinks">
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
@@ -239,6 +333,15 @@
     </div>
     <button class="navtoggle" id="navtoggle" aria-label="Toggle menu">menu</button>
   </nav>
+  
+  <div class="system-drawer" id="systemDrawer">
+    <div class="drawer-grid">
+      <div class="drawer-item">STATUS: <span>READY FOR INCIDENT RESPONSE</span></div>
+      <div class="drawer-item">LOCATION: <span>CAIRO, EGYPT (REMOTE / RELO)</span></div>
+      <div class="drawer-item">PRIMARY SIEM: <span>ELK / SPLUNK</span></div>
+      <div class="drawer-item">LAST UPDATED: <span>ACTIVE CONSOLE</span></div>
+    </div>
+  </div>
 </header>
 
 <main>
@@ -261,10 +364,11 @@
         </div>
       </div>
 
+      <!-- Offenses Board Live Telemetry -->
       <div class="feed">
         <div class="feed-head">
-          <span>email_investigator.py — live output</span>
-          <span class="status"><span class="dot" style="background:var(--amber)"></span>running</span>
+          <span>soc_offenses.log — live telemetry</span>
+          <span class="status"><span class="dot" style="background:var(--red)"></span>active alert</span>
         </div>
         <div class="feed-body" id="feedBody"></div>
       </div>
@@ -303,73 +407,82 @@
         <div class="section-label">02 — Capabilities</div>
         <h2>Technical Skills</h2>
       </div>
+
+      <div class="filter-controls">
+        <button class="filter-btn active" data-filter="all">All Matrix</button>
+        <button class="filter-btn" data-filter="siem">SIEM &amp; Logs</button>
+        <button class="filter-btn" data-filter="intel">Threat Intel &amp; Hunting</button>
+        <button class="filter-btn" data-filter="scripting">Scripting &amp; Tools</button>
+        <button class="filter-btn" data-filter="network">Networking &amp; OS</button>
+      </div>
+
       <div class="skills-grid">
         <div class="skill-cat">
           <h3>SOC &amp; Blue Team Operations</h3>
           <div class="skill-tags">
-            <span class="skill-tag">Security Monitoring</span>
-            <span class="skill-tag">Alert Triage</span>
-            <span class="skill-tag">Incident Detection &amp; Response</span>
-            <span class="skill-tag">Log Analysis</span>
-            <span class="skill-tag">Phishing Investigation</span>
-            <span class="skill-tag">Threat Analysis</span>
-            <span class="skill-tag">Digital Forensics (DFIR)</span>
+            <span class="skill-tag" data-cat="siem">Security Monitoring</span>
+            <span class="skill-tag" data-cat="siem">Alert Triage</span>
+            <span class="skill-tag" data-cat="siem">Incident Detection &amp; Response</span>
+            <span class="skill-tag" data-cat="siem">Log Analysis</span>
+            <span class="skill-tag" data-cat="intel">Phishing Investigation</span>
+            <span class="skill-tag" data-cat="intel">Threat Analysis</span>
+            <span class="skill-tag" data-cat="intel">Digital Forensics (DFIR)</span>
           </div>
         </div>
         <div class="skill-cat">
           <h3>Threat Intelligence &amp; Hunting</h3>
           <div class="skill-tags">
-            <span class="skill-tag">MITRE ATT&amp;CK™</span>
-            <span class="skill-tag">Sigma Rules</span>
-            <span class="skill-tag">Adversary Emulation</span>
-            <span class="skill-tag">Cyber Kill Chain</span>
-            <span class="skill-tag">Diamond Model</span>
-            <span class="skill-tag">NIST IR Framework</span>
-            <span class="skill-tag">Atomic Red Team</span>
-            <span class="skill-tag">CALDERA</span>
+            <span class="skill-tag" data-cat="intel">MITRE ATT&amp;CK™</span>
+            <span class="skill-tag" data-cat="intel">Sigma Rules</span>
+            <span class="skill-tag" data-cat="intel">Adversary Emulation</span>
+            <span class="skill-tag" data-cat="intel">Cyber Kill Chain</span>
+            <span class="skill-tag" data-cat="intel">Diamond Model</span>
+            <span class="skill-tag" data-cat="intel">NIST IR Framework</span>
+            <span class="skill-tag" data-cat="intel">Atomic Red Team</span>
+            <span class="skill-tag" data-cat="intel">CALDERA</span>
           </div>
         </div>
         <div class="skill-cat">
           <h3>SIEM &amp; Security Tools</h3>
           <div class="skill-tags">
-            <span class="skill-tag">Splunk</span>
-            <span class="skill-tag">ELK Stack (ELK/HELK)</span>
-            <span class="skill-tag">Wireshark</span>
-            <span class="skill-tag">Sysmon</span>
+            <span class="skill-tag" data-cat="siem">Splunk</span>
+            <span class="skill-tag" data-cat="siem">ELK Stack (ELK/HELK)</span>
+            <span class="skill-tag" data-cat="network">Wireshark</span>
+            <span class="skill-tag" data-cat="siem">Sysmon</span>
           </div>
         </div>
         <div class="skill-cat">
           <h3>Scripting &amp; Automation</h3>
           <div class="skill-tags">
-            <span class="skill-tag">Python</span>
-            <span class="skill-tag">SSH-based automation</span>
-            <span class="skill-tag">.eml parsing</span>
-            <span class="skill-tag">Bash</span>
+            <span class="skill-tag" data-cat="scripting">Python</span>
+            <span class="skill-tag" data-cat="scripting">SSH-based automation</span>
+            <span class="skill-tag" data-cat="scripting">.eml parsing</span>
+            <span class="skill-tag" data-cat="scripting">Bash</span>
           </div>
         </div>
         <div class="skill-cat">
           <h3>Networking</h3>
           <div class="skill-tags">
-            <span class="skill-tag">TCP/IP</span>
-            <span class="skill-tag">OSI Model</span>
-            <span class="skill-tag">VLANs</span>
-            <span class="skill-tag">Inter-VLAN Routing</span>
-            <span class="skill-tag">RIP &amp; OSPF</span>
-            <span class="skill-tag">DHCP</span>
-            <span class="skill-tag">Firewalls</span>
-            <span class="skill-tag">ACLs</span>
-            <span class="skill-tag">Cisco Packet Tracer</span>
+            <span class="skill-tag" data-cat="network">TCP/IP</span>
+            <span class="skill-tag" data-cat="network">OSI Model</span>
+            <span class="skill-tag" data-cat="network">VLANs</span>
+            <span class="skill-tag" data-cat="network">Inter-VLAN Routing</span>
+            <span class="skill-tag" data-cat="network">RIP &amp; OSPF</span>
+            <span class="skill-tag" data-cat="network">DHCP</span>
+            <span class="skill-tag" data-cat="network">Firewalls</span>
+            <span class="skill-tag" data-cat="network">ACLs</span>
+            <span class="skill-tag" data-cat="network">Cisco Packet Tracer</span>
           </div>
         </div>
         <div class="skill-cat">
           <h3>Security Concepts &amp; OS</h3>
           <div class="skill-tags">
-            <span class="skill-tag">Endpoint Security</span>
-            <span class="skill-tag">Malware Fundamentals</span>
-            <span class="skill-tag">OWASP Top 10</span>
-            <span class="skill-tag">Web Vulnerability Assessment</span>
-            <span class="skill-tag">Linux Administration</span>
-            <span class="skill-tag">Windows Server Administration</span>
+            <span class="skill-tag" data-cat="siem">Endpoint Security</span>
+            <span class="skill-tag" data-cat="intel">Malware Fundamentals</span>
+            <span class="skill-tag" data-cat="intel">OWASP Top 10</span>
+            <span class="skill-tag" data-cat="intel">Web Vulnerability Assessment</span>
+            <span class="skill-tag" data-cat="network">Linux Administration</span>
+            <span class="skill-tag" data-cat="network">Windows Server Administration</span>
           </div>
         </div>
       </div>
@@ -418,25 +531,42 @@
 
       <div class="case closed">
         <div class="case-head">
-          <div class="case-title">VM Threat Hunter</div>
+          <div class="case-title">VM Threat Hunter [CASE-01]</div>
           <div class="case-status closed">tool · shipped</div>
         </div>
         <p class="case-desc">A Python desktop tool that fans out over SSH to a fleet of Linux VMs and runs automated threat-hunting checks against standard log sources.</p>
+        
+        <button class="case-toggle-btn" onclick="toggleDetails('case1-details')">[ + Expand Technical Incident Log ]</button>
+        <div class="case-details" id="case1-details">
+          > TARGET LOGS: /var/log/secure, cron, yum/dnf, audit.log<br>
+          > METHOD: Multithreaded SSH (ThreadPoolExecutor + Paramiko)<br>
+          > EXECUTION: Scans remote fleets simultaneously and streams flagged events in UI.
+        </div>
+
         <ul class="case-list">
           <li>8 detection checks — SSH brute force, sudo abuse, new user/group creation, cron/package anomalies, auditd privilege escalation, suspicious bash history — across /var/log/secure, cron, yum/dnf, and audit.log.</li>
           <li>Multithreaded architecture (ThreadPoolExecutor + queue-based UI updates) with severity-coded findings and JSON/TXT export.</li>
         </ul>
         <div class="case-tags">
           <span class="case-tag">Python</span><span class="case-tag">Tkinter</span><span class="case-tag">Fabric/SSH</span><span class="case-tag">Linux</span>
+          <a class="view-code" href="https://github.com/Mo2Men99Mohamed/VM-Threat-Hunter" target="_blank" rel="noopener">View code</a>
         </div>
       </div>
 
       <div class="case active">
         <div class="case-head">
-          <div class="case-title">SOC Home Lab — Attack Simulation &amp; Investigation</div>
+          <div class="case-title">SOC Home Lab — Attack Simulation &amp; Investigation [CASE-02]</div>
           <div class="case-status active">lab · ongoing</div>
         </div>
         <p class="case-desc">A self-hosted 4-machine SOC lab (ELK Stack, Windows workstation, Windows Server, Caldera server) for end-to-end attack simulation and investigation.</p>
+        
+        <button class="case-toggle-btn" onclick="toggleDetails('case2-details')">[ + Expand Technical Incident Log ]</button>
+        <div class="case-details" id="case2-details">
+          > ARCHITECTURE: Ubuntu ELK, Win Server 2022, Win 10 Target, Caldera C2<br>
+          > TELEMETRY: Sysmon v14 + WinEventLog parsed via Beats/Logstash<br>
+          > COVERAGE: Execution, Persistence, Privilege Escalation mapping to ATT&amp;CK.
+        </div>
+
         <ul class="case-list">
           <li>Simulated adversary emulation attacks against the Windows machine using MITRE Caldera to execute realistic multi-stage TTPs.</li>
           <li>Investigated the resulting activity in ELK, correlating Windows Event Logs and telemetry to identify IOCs and reconstruct the attack timeline.</li>
@@ -448,10 +578,18 @@
 
       <div class="case closed">
         <div class="case-head">
-          <div class="case-title">Email Phishing Investigation Tool</div>
+          <div class="case-title">Email Phishing Investigation Tool [CASE-03]</div>
           <div class="case-status closed">tool · shipped</div>
         </div>
         <p class="case-desc">A Python tool (Tkinter GUI + CLI) that ingests a raw .eml file and runs it through a structured 7-step phishing-investigation playbook, scoring risk automatically.</p>
+        
+        <button class="case-toggle-btn" onclick="toggleDetails('case3-details')">[ + Expand Technical Incident Log ]</button>
+        <div class="case-details" id="case3-details">
+          > ANALYSIS ENGINE: Header parsing, SPF/DKIM validation, URL/attachment extraction<br>
+          > INTEGRATIONS: VirusTotal v3 API, AbuseIPDB API, WHOIS domain lookup<br>
+          > OUTPUT: Generates markdown forensic reports with risk scoring.
+        </div>
+
         <ul class="case-list">
           <li>Sender, SPF/DKIM/DMARC, mail-path, Return-Path/Reply-To, URL, attachment, and body analysis — each scored per a weighted risk model.</li>
           <li>Algorithmic typosquat/brand-impersonation detection, double-extension and macro-attachment triage, and link/button-text mismatch detection.</li>
@@ -459,6 +597,33 @@
         </ul>
         <div class="case-tags">
           <span class="case-tag">Python</span><span class="case-tag">Tkinter</span><span class="case-tag">VirusTotal API</span><span class="case-tag">AbuseIPDB</span>
+          <a class="view-code" href="https://github.com/Mo2Men99Mohamed/Email-Investigator" target="_blank" rel="noopener">View code</a>
+        </div>
+      </div>
+
+      <!-- Malware Analysis Sandbox [CASE-04] -->
+      <div class="case active">
+        <div class="case-head">
+          <div class="case-title">Malware Analysis Sandbox [CASE-04]</div>
+          <div class="case-status active">lab · ongoing</div>
+        </div>
+        <p class="case-desc">A network-isolated VMware Windows 10 malware sandbox structured around SANS FOR610 and Practical Malware Analysis workflows for safe static and dynamic sample triage.</p>
+        
+        <button class="case-toggle-btn" onclick="toggleDetails('case4-details')">[ + Expand Technical Analysis Toolkit ]</button>
+        <div class="case-details" id="case4-details">
+          > STATIC TOOLKIT: YARA, ExeinfoPE, PEstudio, VirusTotal Hash Lookups<br>
+          > DYNAMIC TOOLKIT: Process Monitor, ProcDOT, Regshot, Autoruns, FakeNet-NG, Wireshark<br>
+          > WORKFLOW: SANS FOR610 / Practical Malware Analysis
+        </div>
+
+        <ul class="case-list">
+          <li>Isolated guest environment using Host-Only networking, disabled shared folders, and blocked clipboard/drag-and-drop mechanisms to prevent VM escape.</li>
+          <li>Configured snapshotting mechanisms to instantly revert guest state to a clean baseline prior to executing untrusted samples.</li>
+          <li>Conducted static triage to identify compilers, packers, signatures, imported APIs, and hashes before runtime.</li>
+          <li>Captured dynamic runtime behavior including registry modifications, filesystem changes, persistence mechanisms, and simulated network C2 traffic.</li>
+        </ul>
+        <div class="case-tags">
+          <span class="case-tag">VMware</span><span class="case-tag">PEstudio</span><span class="case-tag">ProcMon</span><span class="case-tag">Wireshark</span><span class="case-tag">YARA</span><span class="case-tag">FakeNet-NG</span>
         </div>
       </div>
 
@@ -487,14 +652,46 @@
         <h2>Certifications</h2>
       </div>
       <div class="cert-grid">
-        <div class="cert"><span class="cert-name">ECIH — EC-Council Certified Incident Handler</span><span class="cert-date progress">In progress</span></div>
-        <div class="cert"><span class="cert-name">Effective Threat Investigation for SOC Analysts (Book)</span><span class="cert-date">Completed 2026</span></div>
-        <div class="cert"><span class="cert-name">CyberOps Associate — Cisco</span><span class="cert-date">May 2026</span></div>
-        <div class="cert"><span class="cert-name">Endpoint Security — Cisco</span><span class="cert-date">May 2026</span></div>
-        <div class="cert"><span class="cert-name">Cyber Threat Management — Cisco</span><span class="cert-date">May 2026</span></div>
-        <div class="cert"><span class="cert-name">SOC Analyst Level 1 — TryHackMe</span><span class="cert-date">Dec 2025 – Jan 2026</span></div>
-        <div class="cert"><span class="cert-name">CCNA — DEPI</span><span class="cert-date">Oct – Dec 2024</span></div>
-        <div class="cert"><span class="cert-name">eJPT — NetRiders Academy</span><span class="cert-date">Feb 2024</span></div>
+        <div class="cert">
+          <span class="cert-name">ECIH — EC-Council Certified Incident Handler</span>
+          <span class="cert-date progress">In progress</span>
+          <div class="cert-tooltip">IN PROGRESS — Incident Handling & Response Methodologies</div>
+        </div>
+        <div class="cert">
+          <span class="cert-name">Effective Threat Investigation for SOC Analysts</span>
+          <span class="cert-date">Completed 2026</span>
+          <div class="cert-tooltip">BOOK / LABS — Advanced Triage, Log Correlation & Threat Hunting</div>
+        </div>
+        <div class="cert">
+          <span class="cert-name">CyberOps Associate — Cisco</span>
+          <span class="cert-date">May 2026</span>
+          <div class="cert-tooltip">VERIFIED — Security Monitoring, Attack Concepts, Network Intrusion</div>
+        </div>
+        <div class="cert">
+          <span class="cert-name">Endpoint Security — Cisco</span>
+          <span class="cert-date">May 2026</span>
+          <div class="cert-tooltip">VERIFIED — Antivirus, EDR Telemetry, Endpoint Hardening</div>
+        </div>
+        <div class="cert">
+          <span class="cert-name">Cyber Threat Management — Cisco</span>
+          <span class="cert-date">May 2026</span>
+          <div class="cert-tooltip">VERIFIED — Governance, Threat Intelligence, Vulnerability Management</div>
+        </div>
+        <div class="cert">
+          <span class="cert-name">SOC Analyst Level 1 — TryHackMe</span>
+          <span class="cert-date">Dec 2025 – Jan 2026</span>
+          <div class="cert-tooltip">VERIFIED — Phishing Analysis, Cyber Kill Chain, Splunk, Wireshark</div>
+        </div>
+        <div class="cert">
+          <span class="cert-name">CCNA — DEPI</span>
+          <span class="cert-date">Oct – Dec 2024</span>
+          <div class="cert-tooltip">COMPLETED — Routing, Switching, Subnetting, Network Security</div>
+        </div>
+        <div class="cert">
+          <span class="cert-name">eJPT — NetRiders Academy</span>
+          <span class="cert-date">Feb 2024</span>
+          <div class="cert-tooltip">COMPLETED — Network Pentesting, Enumeration, Vulnerability Analysis</div>
+        </div>
       </div>
 
       <div style="margin-top:36px;">
@@ -510,10 +707,34 @@
     <div class="wrap">
       <div class="section-label">06 — Get in touch</div>
       <div class="contact-cta">Looking for a SOC Tier 1 analyst who investigates before they escalate.</div>
-      <p style="color:var(--muted); max-width:60ch;">I'm actively interviewing and open to relocation-friendly and remote SOC roles. The fastest way to reach me is email.</p>
+      <p style="color:var(--muted); max-width:60ch;">I'm actively interviewing and open to relocation-friendly and remote SOC roles. Submit a dispatch ticket below or reach out directly.</p>
+      
+      <!-- Interactive Escalation Console Form -->
+      <form class="console-form" id="escalationForm" onsubmit="handleEscalation(event)">
+        <div class="form-group">
+          <label>[1] DISPATCH SEVERITY</label>
+          <select id="severitySelect">
+            <option value="LOW">SEV-3: General Recruitment Inquiry</option>
+            <option value="MEDIUM">SEV-2: Interview Request / SOC Opportunity</option>
+            <option value="HIGH">SEV-1: Immediate SOC Role Placement</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>[2] RECRUITER / SENDER EMAIL</label>
+          <input type="email" id="senderEmail" placeholder="hiring.manager@company.com" required>
+        </div>
+        <div class="form-group">
+          <label>[3] DISPATCH MESSAGE</label>
+          <textarea id="senderMsg" rows="3" placeholder="Provide context regarding the position or opportunity..." required></textarea>
+        </div>
+        <button type="submit" class="form-submit-btn">[ EXECUTE ESCALATION TICKET ]</button>
+        <div class="console-output" id="consoleOutput"></div>
+      </form>
+
       <div class="contact-links">
         <a href="mailto:moamen153811@gmail.com">✉ moamen153811@gmail.com</a>
         <a href="https://www.linkedin.com/in/moamen--mohamed" target="_blank" rel="noopener">in/moamen--mohamed</a>
+        <a href="https://github.com/Mo2Men99Mohamed" target="_blank" rel="noopener">github.com/Mo2Men99Mohamed</a>
         <a href="tel:+201129181872">☎ +20 112 918 1872</a>
       </div>
     </div>
@@ -521,7 +742,7 @@
 </main>
 
 <footer>
-  Built by Moamen Mohamed Fahmy Awad · Cairo, Egypt
+  Built by Moamen Mohamed Fahmy Awad · Security Operations Portfolio
 </footer>
 
 <script>
@@ -531,18 +752,72 @@
   navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
   navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
 
-  // Signature hero element: cycling "live" investigation feed,
-  // built from real findings VM Threat Hunter / Email Investigator would report.
+  // Header status drawer toggle
+  const statusBadge = document.getElementById('statusBadge');
+  const systemDrawer = document.getElementById('systemDrawer');
+  statusBadge.addEventListener('click', () => {
+    systemDrawer.classList.toggle('open');
+  });
+
+  // Interactive Skill Filter
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const skillTags = document.querySelectorAll('.skill-tag');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.getAttribute('data-filter');
+
+      skillTags.forEach(tag => {
+        const cat = tag.getAttribute('data-cat');
+        if (filter === 'all') {
+          tag.classList.remove('highlight', 'dim');
+        } else if (cat === filter) {
+          tag.classList.add('highlight');
+          tag.classList.remove('dim');
+        } else {
+          tag.classList.remove('highlight');
+          tag.classList.add('dim');
+        }
+      });
+    });
+  });
+
+  // Case File Details Toggle
+  function toggleDetails(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('open');
+  }
+
+  // Escalation Form Simulation
+  function handleEscalation(e) {
+    e.preventDefault();
+    const severity = document.getElementById('severitySelect').value;
+    const email = document.getElementById('senderEmail').value;
+    const output = document.getElementById('consoleOutput');
+
+    output.style.display = 'block';
+    output.innerHTML = `> ESCALATING DISPATCH...<br>> PRIORITY: ${severity}<br>> FROM: ${email}<br>> STATUS 200: Ticket logged. Direct email trigger initialized.`;
+    
+    setTimeout(() => {
+      window.location.href = `mailto:moamen153811@gmail.com?subject=[SOC Escalation - ${severity}] Inquiry from ${email}&body=${encodeURIComponent(document.getElementById('senderMsg').value)}`;
+    }, 1200);
+  }
+
+  // Cycling live SOC offenses feed
   const feedEntries = [
-    { tag: 'info', text: 'Parsing headers from suspicious_invoice.eml' },
-    { tag: 'info', text: 'SPF/DKIM/DMARC evaluated against Authentication-Results' },
-    { tag: 'warn', text: 'Sender domain resembles microsoft.com (edit distance 1)' },
-    { tag: 'warn', text: 'Return-Path domain differs from From domain' },
-    { tag: 'crit', text: 'URL flagged: newly registered lookalike domain' },
-    { tag: 'crit', text: 'Attachment invoice.pdf.exe — double-extension detected' },
-    { tag: 'info', text: 'Risk score calculated: 36/54 — Critical' },
-    { tag: 'info', text: 'Report exported: suspicious_invoice_report.md' },
+    { tag: 'warn', text: 'OFFENSE #1042: SSH Brute Force attempt detected on host Linux-SRV01' },
+    { tag: 'info', text: 'Correlating Sysmon Event ID 1 (Process Creation) with network log' },
+    { tag: 'crit', text: 'OFFENSE #1043: LSASS Memory Dump attempted via rundll32.exe' },
+    { tag: 'warn', text: 'Anomalous outbound traffic detected: Port 443 to suspicious IP' },
+    { tag: 'crit', text: 'OFFENSE #1044: Possible C2 Communication flagged by Suricata rule' },
+    { tag: 'info', text: 'Host Workstation-09 isolated via EDR containment action' },
+    { tag: 'warn', text: 'New persistence key added to HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' },
+    { tag: 'crit', text: 'OFFENSE #1045: Privilege Escalation — Unquoted Service Path exploited' },
+    { tag: 'info', text: 'Automated containment script executed — Ticket #8849 logged to SOC queue' }
   ];
+
   const feedBody = document.getElementById('feedBody');
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let i = 0;
